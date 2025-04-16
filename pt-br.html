@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Palavra Correta</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #fff8dc;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #d35400;
+      font-size: 2.5em;
+    }
+
+    #imagem {
+      width: 150px;
+      height: 150px;
+      margin: 20px;
+      object-fit: contain;
+    }
+
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .btn-option {
+      font-size: 1.5em;
+      padding: 15px 30px;
+      background-color: #f1c40f;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-option:hover {
+      background-color: #f39c12;
+    }
+
+    #feedback {
+      font-size: 1.3em;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #next-btn {
+      margin-top: 20px;
+      display: none;
+    }
+
+    #tema {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: #2d3436;
+    }
+
+    #progresso {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎓 Jogo da Palavra Correta</h1>
+  <div id="tema"></div>
+  <p>Clique na palavra que representa a imagem 👇</p>
+  <img id="imagem" src="" alt="Imagem ilustrativa">
+  <div class="options" id="options-container"></div>
+  <div id="feedback"></div>
+  <button id="next-btn" class="btn-option" onclick="proximaRodada()">Próxima</button>
+  <div id="progresso"></div>
+
+  <script>
+    const palavras = [
+      { imagem: "https://cdn-icons-png.flaticon.com/512/616/616408.png", correta: "casa", opcoes: ["casa", "mesa", "vaca"], tema: "Objetos" },
+      { imagem: "https://cdn-icons-png.flaticon.com/512/616/616408.png", correta: "gato", opcoes: ["gato", "rato", "sapo"], tema: "Animais" },
+      { imagem: "https://cdn-icons-png.flaticon.com/512/616/616408.png", correta: "bola", opcoes: ["bola", "pato", "faca"], tema: "Brinquedos" }
+    ];
+
+    let rodadaAtual = 0;
+
+    function falar(texto) {
+      const utterance = new SpeechSynthesisUtterance(texto);
+      utterance.lang = 'pt-BR';
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function soletrarPalavra(palavra) {
+      const silabas = palavra.toUpperCase().split('').join(' - ');
+      falar(silabas);
+    }
+
+    function carregarRodada() {
+      const rodada = palavras[rodadaAtual];
+      document.getElementById('imagem').src = rodada.imagem;
+      document.getElementById('feedback').innerText = "";
+      document.getElementById('next-btn').style.display = "none";
+      document.getElementById('tema').innerText = `🗂 Tema: ${rodada.tema}`;
+      document.getElementById('progresso').innerText = `✔️ Palavra ${rodadaAtual + 1} de ${palavras.length}`;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = "";
+
+      rodada.opcoes.forEach(opcao => {
+        const botao = document.createElement("button");
+        botao.innerText = opcao;
+        botao.classList.add("btn-option");
+        botao.onclick = () => verificarResposta(opcao, rodada.correta);
+        container.appendChild(botao);
+      });
+
+      falar(`Clique na palavra ${rodada.correta}`);
+      setTimeout(() => soletrarPalavra(rodada.correta), 3000);
+    }
+
+    function verificarResposta(escolhida, correta) {
+      const feedback = document.getElementById('feedback');
+      if (escolhida === correta) {
+        feedback.innerText = "✅ Muito bem!";
+        feedback.style.color = "green";
+        document.getElementById('next-btn').style.display = "inline-block";
+      } else {
+        feedback.innerText = "❌ Tente novamente!";
+        feedback.style.color = "red";
+      }
+    }
+
+    function proximaRodada() {
+      rodadaAtual++;
+      if (rodadaAtual < palavras.length) {
+        carregarRodada();
+      } else {
+        document.body.innerHTML = "<h1>🎉 Parabéns! Você completou todas as palavras!</h1>";
+      }
+    }
+
+    carregarRodada();
+  </script>
+</body>
+</html>
