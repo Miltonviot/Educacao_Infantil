@@ -2,215 +2,261 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Jogo de Separar Sílabas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+  <title>Separação Silábica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Comic Neue', cursive;
-      background-color: #e0f7fa;
+    body { background: #f1f3f5; padding: 30px; }
+    h1 { text-align: center; color: #0d6efd; margin-bottom: 30px; }
+    .silaba-box {
+      width: 90px;
+      height: 50px;
+      font-size: 22px;
       text-align: center;
-      padding: 30px;
+      margin: 6px;
     }
-
-    h1 {
-      color: #0077c2;
-      font-size: 2.5em;
-      margin-bottom: 10px;
+    .silaba-box:focus { border: 2px solid #0d6efd; outline: none; }
+    .teclado button {
+      width: 42px; height: 42px; margin: 3px;
+      font-size: 18px; border-radius: 6px;
     }
-
-    #instrucoes {
-      font-size: 1.3em;
-      color: #444;
-    }
-
-    #silabas {
-      margin: 30px 0;
-    }
-
-    .silaba-btn {
-      display: inline-block;
-      background-color: #ffe066;
-      color: #333;
-      font-size: 1.5em;
-      padding: 15px 25px;
-      margin: 10px;
-      border-radius: 12px;
-      cursor: pointer;
-      border: 3px solid #f0c000;
-      transition: all 0.2s ease;
-    }
-
-    .silaba-btn:hover {
-      background-color: #ffd633;
-      transform: scale(1.05);
-    }
-
-    #resposta {
-      margin-top: 20px;
-      font-size: 1.6em;
-      font-weight: bold;
-      color: #2e7d32;
-    }
-
-    #palavra-montada {
-      font-size: 1.8em;
-      margin-top: 10px;
-      color: #0288d1;
-    }
-
-    #btn-proxima {
-      margin-top: 25px;
-      background-color: #4caf50;
+    .teclado button:hover {
+      background-color: #0d6efd;
       color: white;
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 10px;
-      display: none;
-    }
-
-    #btn-proxima:hover {
-      background-color: #388e3c;
-    }
-
-    #voltar {
-      display: inline-block;
-      margin-top: 30px;
-      background-color: #ff6f61;
-      color: white;
-      padding: 10px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 10px;
-      text-decoration: none;
-    }
-
-    #voltar:hover {
-      background-color: #e53935;
     }
   </style>
 </head>
 <body>
-  <h1>Jogo de Separar Sílabas 🧠✂️</h1>
-  <div id="instrucoes">Monte a palavra abaixo usando as sílabas corretas:</div>
 
-  <div id="silabas"></div>
-  <div id="palavra-montada"></div>
-  <div id="resposta"></div>
+  <h1>Separação Silábica</h1>
 
-  <button id="btn-proxima" onclick="novaRodada()">🔄 Próxima Palavra</button>
-  <br><br>
-  <a href="index.html" id="voltar">⬅ Voltar ao Início</a>
+  <div class="text-center mb-4">
+    <div id="palavra" class="fs-3 fw-bold text-primary"></div>
+    <div id="caixas-silabas" class="d-flex justify-content-center flex-wrap mt-3"></div>
+  </div>
+
+  <div class="teclado text-center mb-4" id="teclado"></div>
+
+  <div class="text-center mb-3">
+    <button class="btn btn-primary me-2" onclick="verificar()">Verificar</button>
+    <button class="btn btn-warning" onclick="novaRodada()">Trocar Palavra</button>
+  </div>
+
+  <p id="mensagem" class="text-center fs-4"></p>
 
   <script>
-  // Lista de palavras simples do cotidiano para a faixa etária (até 3 sílabas)
-  const bancoPalavras = [
-  "túnel", "ônibus", "formiga", "claro", "pequeno", "noite", "dois", "trem", "bonito", "ano",
-  "seis", "mão", "barriga", "aberto", "sol", "moeda", "um", "verde", "estrela", "calça",
-  "óculos", "pai", "amarelo", "chinelo", "fechado", "cola", "copo", "tarde", "baixo", "cinza",
-  "irmão", "novo", "caminhão", "professor", "gelado", "brinquedo", "sete", "avô", "papel", "lago",
-  "pião", "caneta", "dez", "joelho", "manhã", "patins", "chuva", "bola", "alegre", "anel",
-  "vez", "bravo", "perna", "amargo", "bambolê", "dente", "oito", "estojo", "pincel", "esquerda",
-  "suco", "meia", "fogo", "pão", "corda", "adulto", "gosto", "frente", "dedo", "rosa",
-  "blusa", "terra", "três", "atrás", "limpo", "cobra", "doce", "mês", "dentro", "nove",
-  "carrinho", "celular", "perto", "bicho", "avião", "rio", "nuvem", "ponte", "pedra", "irmã",
-  "sujo", "azedo", "mamão", "relógio", "amigo", "mesa", "papagaio", "vento", "gato", "azul",
-  "regua", "hoje", "navio", "cheio", "semana", "cabeça", "frio", "em cima", "boné", "bicicleta",
-  "abelha", "menina", "roupa", "triste", "criança", "quieto", "mar", "bebê", "vermelho", "rede",
-  "preto", "metrô", "amiga", "feio", "urso", "fora", "devagar", "rápido", "tesoura", "livro",
-  "aluno", "galo", "quadro", "segundo", "céu", "zero", "ontem", "carro", "água", "banco",
-  "marrom", "barco", "trator", "costas", "turma", "boneco", "melão", "lua", "gordo", "areia",
-  "giz", "macaco", "braço", "magro", "longe", "moto", "galinha", "sapo", "direita", "borracha",
-  "cadeira", "quatro", "garfo", "tempo", "leite", "cheiro", "quebra", "vaca", "tigre", "corpo",
-  "roxo", "banana", "dia", "boneca", "mãe", "rosto", "quente", "pato", "boca", "neve",
-  "avó", "janela", "pessoa", "escola", "menino", "escuro", "cinco", "tia", "família", "orelha",
-  "nariz", "alto", "grande", "número", "jaqueta", "brinco", "colorido", "amanhã", "pente", "lousa",
-  "vazio", "ninho", "salgado", "tênis", "embaixo", "estrada", "calmo", "lápis", "tinta", "mochila",
-  "olho", "cabelo", "pé", "sapato", "hora", "asfalto", "minuto", "ombro", "cama", "vizinho",
-  "barulhento", "velho", "caderno", "branco", "morno", "apontador", "panela", "tio"
+    // Dicionário de palavras com separação silábica correta
+    const palavras = [
+  { completa: "papel", silabas: ["pa", "pel"] },
+  { completa: "boneca", silabas: ["bo", "ne", "ca"] },
+  { completa: "formiga", silabas: ["for", "mi", "ga"] },
+  { completa: "chuva", silabas: ["chu", "va"] },
+  { completa: "abacaxi", silabas: ["a", "ba", "ca", "xi"] },
+  { completa: "janela", silabas: ["ja", "ne", "la"] },
+  { completa: "livro", silabas: ["li", "vro"] },
+  { completa: "carro", silabas: ["car", "ro"] },
+  { completa: "bicicleta", silabas: ["bi", "ci", "cle", "ta"] },
+  { completa: "computador", silabas: ["com", "pu", "ta", "dor"] },
+  { completa: "banana", silabas: ["ba", "na", "na"] },
+  { completa: "cadeira", silabas: ["ca", "dei", "ra"] },
+  { completa: "amarelo", silabas: ["a", "ma", "re", "lo"] },
+  { completa: "tigre", silabas: ["ti", "gre"] },
+  { completa: "foguete", silabas: ["fo", "gue", "te"] },
+  { completa: "borboleta", silabas: ["bor", "bo", "le", "ta"] },
+  { completa: "cachorro", silabas: ["ca", "chor", "ro"] },
+  { completa: "guitarra", silabas: ["gui", "tar", "ra"] },
+  { completa: "palhaço", silabas: ["pa", "lha", "ço"] },
+  { completa: "geladeira", silabas: ["ge", "la", "dei", "ra"] },
+  { completa: "televisão", silabas: ["te", "le", "vi", "são"] },
+  { completa: "camiseta", silabas: ["ca", "mi", "se", "ta"] },
+  { completa: "macaco", silabas: ["ma", "ca", "co"] },
+  { completa: "quadro", silabas: ["qua", "dro"] },
+  { completa: "travesseiro", silabas: ["tra", "ves", "sei", "ro"] },
+  { completa: "avião", silabas: ["a", "vi", "ão"] },
+  { completa: "abelha", silabas: ["a", "be", "lha"] },
+  { completa: "escola", silabas: ["es", "co", "la"] },
+  { completa: "dentista", silabas: ["den", "tis", "ta"] },
+  { completa: "brinquedo", silabas: ["brin", "que", "do"] },
+  { completa: "tartaruga", silabas: ["tar", "ta", "ru", "ga"] },
+  { completa: "navio", silabas: ["na", "vi", "o"] },
+  { completa: "oculos", silabas: ["ó", "cu", "los"] },
+  { completa: "montanha", silabas: ["mon", "ta", "nha"] },
+  { completa: "sorvete", silabas: ["sor", "ve", "te"] },
+  { completa: "leão", silabas: ["le", "ão"] },
+  { completa: "elefante", silabas: ["e", "le", "fan", "te"] },
+  { completa: "escada", silabas: ["es", "ca", "da"] },
+  { completa: "sapato", silabas: ["sa", "pa", "to"] },
+  { completa: "janela", silabas: ["ja", "ne", "la"] },
+  { completa: "pirulito", silabas: ["pi", "ru", "li", "to"] },
+  { completa: "batata", silabas: ["ba", "ta", "ta"] },
+  { completa: "picolé", silabas: ["pi", "co", "lé"] },
+  { completa: "margarida", silabas: ["mar", "ga", "ri", "da"] },
+  { completa: "cenoura", silabas: ["ce", "nou", "ra"] },
+  { completa: "feijão", silabas: ["fei", "jão"] },
+  { completa: "arroz", silabas: ["ar", "roz"] },
+  { completa: "tomate", silabas: ["to", "ma", "te"] },
+  { completa: "morango", silabas: ["mo", "ran", "go"] },
+  { completa: "limão", silabas: ["li", "mão"] },
+  { completa: "laranja", silabas: ["la", "ran", "ja"] },
+  { completa: "melancia", silabas: ["me", "lan", "ci", "a"] },
+  { completa: "abacate", silabas: ["a", "ba", "ca", "te"] },
+  { completa: "cavalo", silabas: ["ca", "va", "lo"] },
+  { completa: "camelo", silabas: ["ca", "me", "lo"] },
+  { completa: "girassol", silabas: ["gi", "ras", "sol"] },
+  { completa: "nuvem", silabas: ["nu", "vem"] },
+  { completa: "relógio", silabas: ["re", "ló", "gio"] },
+  { completa: "garfo", silabas: ["gar", "fo"] },
+  { completa: "colher", silabas: ["co", "lher"] },
+  { completa: "prato", silabas: ["pra", "to"] },
+  { completa: "mesa", silabas: ["me", "sa"] },
+  { completa: "cadeado", silabas: ["ca", "de", "a", "do"] },
+  { completa: "mochila", silabas: ["mo", "chi", "la"] },
+  { completa: "pijama", silabas: ["pi", "ja", "ma"] },
+  { completa: "tapete", silabas: ["ta", "pe", "te"] },
+  { completa: "panela", silabas: ["pa", "ne", "la"] },
+  { completa: "travesseiro", silabas: ["tra", "ves", "sei", "ro"] },
+  { completa: "espelho", silabas: ["es", "pe", "lho"] },
+  { completa: "barco", silabas: ["bar", "co"] },
+  { completa: "ponte", silabas: ["pon", "te"] },
+  { completa: "telhado", silabas: ["te", "lha", "do"] },
+  { completa: "cortina", silabas: ["cor", "ti", "na"] },
+  { completa: "cimento", silabas: ["ci", "men", "to"] },
+  { completa: "cadeado", silabas: ["ca", "de", "a", "do"] },
+  { completa: "caderno", silabas: ["ca", "der", "no"] },
+  { completa: "recreio", silabas: ["re", "cre", "io"] },
+  { completa: "história", silabas: ["his", "tó", "ri", "a"] },
+  { completa: "leitura", silabas: ["lei", "tu", "ra"] },
+  { completa: "desenho", silabas: ["de", "sen", "ho"] },
+  { completa: "pintura", silabas: ["pin", "tu", "ra"] },
+  { completa: "violão", silabas: ["vi", "o", "lão"] },
+  { completa: "viagem", silabas: ["vi", "a", "gem"] },
+  { completa: "ônibus", silabas: ["ô", "ni", "bus"] },
+  { completa: "janela", silabas: ["ja", "ne", "la"] },
+  { completa: "trator", silabas: ["tra", "tor"] },
+  { completa: "telefone", silabas: ["te", "le", "fo", "ne"] },
+  { completa: "caderno", silabas: ["ca", "der", "no"] },
+  { completa: "ferramenta", silabas: ["fer", "ra", "men", "ta"] },
+  { completa: "planeta", silabas: ["pla", "ne", "ta"] },
+  { completa: "estante", silabas: ["es", "tan", "te"] },
+  { completa: "lanterna", silabas: ["lan", "ter", "na"] },
+  { completa: "anel", silabas: ["a", "nel"] },
+  { completa: "floresta", silabas: ["flo", "res", "ta"] },
+  { completa: "chuveiro", silabas: ["chu", "vei", "ro"] },
+  { completa: "parque", silabas: ["par", "que"] },
+  { completa: "gramado", silabas: ["gra", "ma", "do"] },
+  { completa: "piscina", silabas: ["pis", "ci", "na"] },
+  { completa: "esquilo", silabas: ["es", "qui", "lo"] },
+  { completa: "abelha", silabas: ["a", "be", "lha"] },
+  { completa: "gelo", silabas: ["ge", "lo"] },
+  { completa: "banco", silabas: ["ban", "co"] },
+  { completa: "lápis", silabas: ["lá", "pis"] },
+  { completa: "caneta", silabas: ["ca", "ne", "ta"] },
+  { completa: "borracha", silabas: ["bo", "rra", "cha"] },
+  { completa: "régua", silabas: ["ré", "gua"] },
+  { completa: "quadro", silabas: ["qua", "dro"] },
+  { completa: "mapa", silabas: ["ma", "pa"] },
+  { completa: "globo", silabas: ["glo", "bo"] },
+  { completa: "planilha", silabas: ["pla", "ni", "lha"] },
+  { completa: "giz", silabas: ["giz"] },
+  { completa: "porta", silabas: ["por", "ta"] },
+  { completa: "lousa", silabas: ["lou", "sa"] },
+  { completa: "professor", silabas: ["pro", "fes", "sor"] },
+  { completa: "aluno", silabas: ["a", "lu", "no"] },
+  { completa: "turma", silabas: ["tur", "ma"] },
+  { completa: "página", silabas: ["pá", "gi", "na"] },
+  { completa: "história", silabas: ["his", "tó", "ri", "a"] },
+  { completa: "ciência", silabas: ["ci", "ên", "cia"] },
+  { completa: "música", silabas: ["mú", "si", "ca"] },
+  { completa: "teatro", silabas: ["te", "a", "tro"] },
+  { completa: "dança", silabas: ["dan", "ça"] },
+  { completa: "pintura", silabas: ["pin", "tu", "ra"] }
 ];
 
 
-  let usadas = []; // Evita repetição
+    let palavraAtual = {};
+    let silabaAtiva = null;
 
-  // Separador de sílabas simples baseado em vogais
-  function separarSilabas(palavra) {
-    const vogais = "aeiouáéíóúâêôãõ";
-    let silabas = [];
-    let atual = "";
+    function novaRodada() {
+      document.getElementById("mensagem").textContent = "";
+      const sorteada = palavras[Math.floor(Math.random() * palavras.length)];
+      palavraAtual = sorteada;
 
-    for (let i = 0; i < palavra.length; i++) {
-      atual += palavra[i];
-      if (vogais.includes(palavra[i].toLowerCase())) {
-        // Se próxima letra for consoante + vogal, inclui junto
-        if (i + 1 < palavra.length && !vogais.includes(palavra[i + 1].toLowerCase()) &&
-            i + 2 < palavra.length && vogais.includes(palavra[i + 2].toLowerCase())) {
-          atual += palavra[i + 1];
-          i++;
+      // Exibe a palavra inteira
+      document.getElementById("palavra").textContent = sorteada.completa;
+
+      // Cria campos de sílabas
+      const caixas = document.getElementById("caixas-silabas");
+      caixas.innerHTML = "";
+
+      sorteada.silabas.forEach((s, index) => {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "silaba-box form-control";
+        input.maxLength = s.length;
+        input.setAttribute("data-index", index);
+        input.onclick = () => silabaAtiva = input;
+        caixas.appendChild(input);
+      });
+    }
+
+    function criarTeclado() {
+      const letras = "abcdefghijklmnopqrstuvwxyzçáéíóúâêôãõ".split("");
+      const teclado = document.getElementById("teclado");
+      teclado.innerHTML = "";
+
+      letras.forEach(letra => {
+        const btn = document.createElement("button");
+        btn.className = "btn btn-outline-dark";
+        btn.textContent = letra;
+        btn.onclick = () => inserirLetra(letra);
+        teclado.appendChild(btn);
+      });
+
+      const btnApagar = document.createElement("button");
+      btnApagar.className = "btn btn-danger mt-2";
+      btnApagar.innerHTML = "&larr; "; // seta ← com espaço correto e sem quebrar visualmente
+
+      btnApagar.onclick = () => {
+        if (silabaAtiva) silabaAtiva.value = silabaAtiva.value.slice(0, -1);
+      };
+      teclado.appendChild(document.createElement("br"));
+      teclado.appendChild(btnApagar);
+    }
+
+    function inserirLetra(letra) {
+      if (silabaAtiva && silabaAtiva.value.length < silabaAtiva.maxLength) {
+        silabaAtiva.value += letra;
+      }
+    }
+
+    function verificar() {
+      const inputs = document.querySelectorAll(".silaba-box");
+      let acertos = 0;
+
+      inputs.forEach((input, index) => {
+        const esperado = palavraAtual.silabas[index].toLowerCase();
+        const digitado = input.value.trim().toLowerCase();
+
+        if (digitado === esperado) {
+          input.classList.remove("border-danger");
+          input.classList.add("border-success");
+          acertos++;
+        } else {
+          input.classList.remove("border-success");
+          input.classList.add("border-danger");
         }
-        silabas.push(atual);
-        atual = "";
-      }
+      });
+
+      const msg = document.getElementById("mensagem");
+      msg.textContent = acertos === palavraAtual.silabas.length
+        ? "🎉 Muito bem! Separação correta!"
+        : "❌ Opa! Tente novamente.";
     }
-    if (atual) silabas.push(atual);
-    return silabas;
-  }
 
-  let palavraAtual;
-  let respostaUsuario = "";
-
-  function embaralhar(array) {
-    return array.sort(() => Math.random() - 0.5);
-  }
-
-  function novaRodada() {
-    document.getElementById("btn-proxima").style.display = "none";
-    document.getElementById("resposta").innerHTML = "";
-    document.getElementById("palavra-montada").innerHTML = "";
-
-    if (usadas.length === bancoPalavras.length) usadas = []; // Reinicia lista
-
-    let palavraEscolhida;
-    do {
-      palavraEscolhida = bancoPalavras[Math.floor(Math.random() * bancoPalavras.length)];
-    } while (usadas.includes(palavraEscolhida));
-    usadas.push(palavraEscolhida);
-
-    const silabasSeparadas = separarSilabas(palavraEscolhida);
-
-    palavraAtual = {
-      completa: palavraEscolhida,
-      silabas: silabasSeparadas
+    window.onload = () => {
+      criarTeclado();
+      novaRodada();
     };
-
-    respostaUsuario = "";
-    const container = document.getElementById("silabas");
-    container.innerHTML = "";
-
-    const embaralhadas = embaralhar([...palavraAtual.silabas]);
-    embaralhadas.forEach(s => {
-      const btn = document.createElement("button");
-      btn.textContent = s;
-      btn.className = "silaba-btn";
-      btn.onclick = () => clicarSilaba(s);
-      container.appendChild(btn);
-    });
-  }
-
-  function clicarSilaba(silaba) {
-    respostaUsuario += silaba;
-    document.getElementById("palavra-montada").innerHTML = respostaUsuario;
-
-    if (respostaUsuario.length >= palavraAtual.completa.length) {
-      if (respostaUsuario === palavraAtual.completa) {
-        document.getElementById("resposta").innerHTML = "🎉 Muito bem!";
-      } else {
-        document.getElementById("resposta").innerHTML = "❌ Opa! Tente outra vez!";
-      }
-      document.getElementById("btn-proxima").style.display = "inline-block";
-    }
-  }
-
-  // Chamada inicial
-  window.onload = novaRodada;
-</script>
+  </script>
+</body>
+</html>
