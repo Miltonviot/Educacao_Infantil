@@ -2,147 +2,215 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Jogo da Palavra Correta</title>
+  <title>Jogo de Separar Sílabas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      background-color: #fff8dc;
+      font-family: 'Comic Neue', cursive;
+      background-color: #e0f7fa;
       text-align: center;
       padding: 30px;
     }
 
     h1 {
-      color: #d35400;
+      color: #0077c2;
       font-size: 2.5em;
+      margin-bottom: 10px;
     }
 
-    #imagem {
-      width: 150px;
-      height: 150px;
-      margin: 20px;
-      object-fit: contain;
+    #instrucoes {
+      font-size: 1.3em;
+      color: #444;
     }
 
-    .options {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 30px;
-      flex-wrap: wrap;
+    #silabas {
+      margin: 30px 0;
     }
 
-    .btn-option {
+    .silaba-btn {
+      display: inline-block;
+      background-color: #ffe066;
+      color: #333;
       font-size: 1.5em;
-      padding: 15px 30px;
-      background-color: #f1c40f;
+      padding: 15px 25px;
+      margin: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 3px solid #f0c000;
+      transition: all 0.2s ease;
+    }
+
+    .silaba-btn:hover {
+      background-color: #ffd633;
+      transform: scale(1.05);
+    }
+
+    #resposta {
+      margin-top: 20px;
+      font-size: 1.6em;
+      font-weight: bold;
+      color: #2e7d32;
+    }
+
+    #palavra-montada {
+      font-size: 1.8em;
+      margin-top: 10px;
+      color: #0288d1;
+    }
+
+    #btn-proxima {
+      margin-top: 25px;
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1em;
       border: none;
       border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn-option:hover {
-      background-color: #f39c12;
-    }
-
-    #feedback {
-      font-size: 1.3em;
-      margin-top: 20px;
-      font-weight: bold;
-    }
-
-    #next-btn {
-      margin-top: 20px;
       display: none;
     }
 
-    #tema {
-      font-size: 1.2em;
-      margin-bottom: 10px;
-      color: #2d3436;
+    #btn-proxima:hover {
+      background-color: #388e3c;
     }
 
-    #progresso {
-      margin-top: 20px;
-      font-size: 1.2em;
+    #voltar {
+      display: inline-block;
+      margin-top: 30px;
+      background-color: #ff6f61;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+    }
+
+    #voltar:hover {
+      background-color: #e53935;
     }
   </style>
 </head>
 <body>
-  <h1>🎓 Jogo da Palavra Correta</h1>
-  <div id="tema"></div>
-  <p>Clique na palavra que representa a imagem 👇</p>
-  <img id="imagem" src="" alt="Imagem ilustrativa">
-  <div class="options" id="options-container"></div>
-  <div id="feedback"></div>
-  <button id="next-btn" class="btn-option" onclick="proximaRodada()">Próxima</button>
-  <div id="progresso"></div>
+  <h1>Jogo de Separar Sílabas 🧠✂️</h1>
+  <div id="instrucoes">Monte a palavra abaixo usando as sílabas corretas:</div>
+
+  <div id="silabas"></div>
+  <div id="palavra-montada"></div>
+  <div id="resposta"></div>
+
+  <button id="btn-proxima" onclick="novaRodada()">🔄 Próxima Palavra</button>
+  <br><br>
+  <a href="index.html" id="voltar">⬅ Voltar ao Início</a>
 
   <script>
-    const palavras = [
-      { imagem: "https://cdn-icons-png.flaticon.com/512/616/616408.png", correta: "casa", opcoes: ["casa", "mesa", "vaca"], tema: "Objetos" },
-      { imagem: "https://cdn-icons-png.flaticon.com/512/616/616408.png", correta: "gato", opcoes: ["gato", "rato", "sapo"], tema: "Animais" },
-      { imagem: "https://cdn-icons-png.flaticon.com/512/616/616408.png", correta: "bola", opcoes: ["bola", "pato", "faca"], tema: "Brinquedos" }
-    ];
+  // Lista de palavras simples do cotidiano para a faixa etária (até 3 sílabas)
+  const bancoPalavras = [
+  "túnel", "ônibus", "formiga", "claro", "pequeno", "noite", "dois", "trem", "bonito", "ano",
+  "seis", "mão", "barriga", "aberto", "sol", "moeda", "um", "verde", "estrela", "calça",
+  "óculos", "pai", "amarelo", "chinelo", "fechado", "cola", "copo", "tarde", "baixo", "cinza",
+  "irmão", "novo", "caminhão", "professor", "gelado", "brinquedo", "sete", "avô", "papel", "lago",
+  "pião", "caneta", "dez", "joelho", "manhã", "patins", "chuva", "bola", "alegre", "anel",
+  "vez", "bravo", "perna", "amargo", "bambolê", "dente", "oito", "estojo", "pincel", "esquerda",
+  "suco", "meia", "fogo", "pão", "corda", "adulto", "gosto", "frente", "dedo", "rosa",
+  "blusa", "terra", "três", "atrás", "limpo", "cobra", "doce", "mês", "dentro", "nove",
+  "carrinho", "celular", "perto", "bicho", "avião", "rio", "nuvem", "ponte", "pedra", "irmã",
+  "sujo", "azedo", "mamão", "relógio", "amigo", "mesa", "papagaio", "vento", "gato", "azul",
+  "regua", "hoje", "navio", "cheio", "semana", "cabeça", "frio", "em cima", "boné", "bicicleta",
+  "abelha", "menina", "roupa", "triste", "criança", "quieto", "mar", "bebê", "vermelho", "rede",
+  "preto", "metrô", "amiga", "feio", "urso", "fora", "devagar", "rápido", "tesoura", "livro",
+  "aluno", "galo", "quadro", "segundo", "céu", "zero", "ontem", "carro", "água", "banco",
+  "marrom", "barco", "trator", "costas", "turma", "boneco", "melão", "lua", "gordo", "areia",
+  "giz", "macaco", "braço", "magro", "longe", "moto", "galinha", "sapo", "direita", "borracha",
+  "cadeira", "quatro", "garfo", "tempo", "leite", "cheiro", "quebra", "vaca", "tigre", "corpo",
+  "roxo", "banana", "dia", "boneca", "mãe", "rosto", "quente", "pato", "boca", "neve",
+  "avó", "janela", "pessoa", "escola", "menino", "escuro", "cinco", "tia", "família", "orelha",
+  "nariz", "alto", "grande", "número", "jaqueta", "brinco", "colorido", "amanhã", "pente", "lousa",
+  "vazio", "ninho", "salgado", "tênis", "embaixo", "estrada", "calmo", "lápis", "tinta", "mochila",
+  "olho", "cabelo", "pé", "sapato", "hora", "asfalto", "minuto", "ombro", "cama", "vizinho",
+  "barulhento", "velho", "caderno", "branco", "morno", "apontador", "panela", "tio"
+];
 
-    let rodadaAtual = 0;
 
-    function falar(texto) {
-      const utterance = new SpeechSynthesisUtterance(texto);
-      utterance.lang = 'pt-BR';
-      window.speechSynthesis.speak(utterance);
-    }
+  let usadas = []; // Evita repetição
 
-    function soletrarPalavra(palavra) {
-      const silabas = palavra.toUpperCase().split('').join(' - ');
-      falar(silabas);
-    }
+  // Separador de sílabas simples baseado em vogais
+  function separarSilabas(palavra) {
+    const vogais = "aeiouáéíóúâêôãõ";
+    let silabas = [];
+    let atual = "";
 
-    function carregarRodada() {
-      const rodada = palavras[rodadaAtual];
-      document.getElementById('imagem').src = rodada.imagem;
-      document.getElementById('feedback').innerText = "";
-      document.getElementById('next-btn').style.display = "none";
-      document.getElementById('tema').innerText = `🗂 Tema: ${rodada.tema}`;
-      document.getElementById('progresso').innerText = `✔️ Palavra ${rodadaAtual + 1} de ${palavras.length}`;
-
-      const container = document.getElementById('options-container');
-      container.innerHTML = "";
-
-      rodada.opcoes.forEach(opcao => {
-        const botao = document.createElement("button");
-        botao.innerText = opcao;
-        botao.classList.add("btn-option");
-        botao.onclick = () => verificarResposta(opcao, rodada.correta);
-        container.appendChild(botao);
-      });
-
-      falar(`Clique na palavra ${rodada.correta}`);
-      setTimeout(() => soletrarPalavra(rodada.correta), 3000);
-    }
-
-    function verificarResposta(escolhida, correta) {
-      const feedback = document.getElementById('feedback');
-      if (escolhida === correta) {
-        feedback.innerText = "✅ Muito bem!";
-        feedback.style.color = "green";
-        document.getElementById('next-btn').style.display = "inline-block";
-      } else {
-        feedback.innerText = "❌ Tente novamente!";
-        feedback.style.color = "red";
+    for (let i = 0; i < palavra.length; i++) {
+      atual += palavra[i];
+      if (vogais.includes(palavra[i].toLowerCase())) {
+        // Se próxima letra for consoante + vogal, inclui junto
+        if (i + 1 < palavra.length && !vogais.includes(palavra[i + 1].toLowerCase()) &&
+            i + 2 < palavra.length && vogais.includes(palavra[i + 2].toLowerCase())) {
+          atual += palavra[i + 1];
+          i++;
+        }
+        silabas.push(atual);
+        atual = "";
       }
     }
+    if (atual) silabas.push(atual);
+    return silabas;
+  }
 
-    function proximaRodada() {
-      rodadaAtual++;
-      if (rodadaAtual < palavras.length) {
-        carregarRodada();
+  let palavraAtual;
+  let respostaUsuario = "";
+
+  function embaralhar(array) {
+    return array.sort(() => Math.random() - 0.5);
+  }
+
+  function novaRodada() {
+    document.getElementById("btn-proxima").style.display = "none";
+    document.getElementById("resposta").innerHTML = "";
+    document.getElementById("palavra-montada").innerHTML = "";
+
+    if (usadas.length === bancoPalavras.length) usadas = []; // Reinicia lista
+
+    let palavraEscolhida;
+    do {
+      palavraEscolhida = bancoPalavras[Math.floor(Math.random() * bancoPalavras.length)];
+    } while (usadas.includes(palavraEscolhida));
+    usadas.push(palavraEscolhida);
+
+    const silabasSeparadas = separarSilabas(palavraEscolhida);
+
+    palavraAtual = {
+      completa: palavraEscolhida,
+      silabas: silabasSeparadas
+    };
+
+    respostaUsuario = "";
+    const container = document.getElementById("silabas");
+    container.innerHTML = "";
+
+    const embaralhadas = embaralhar([...palavraAtual.silabas]);
+    embaralhadas.forEach(s => {
+      const btn = document.createElement("button");
+      btn.textContent = s;
+      btn.className = "silaba-btn";
+      btn.onclick = () => clicarSilaba(s);
+      container.appendChild(btn);
+    });
+  }
+
+  function clicarSilaba(silaba) {
+    respostaUsuario += silaba;
+    document.getElementById("palavra-montada").innerHTML = respostaUsuario;
+
+    if (respostaUsuario.length >= palavraAtual.completa.length) {
+      if (respostaUsuario === palavraAtual.completa) {
+        document.getElementById("resposta").innerHTML = "🎉 Muito bem!";
       } else {
-        document.body.innerHTML = "<h1>🎉 Parabéns! Você completou todas as palavras!</h1>";
+        document.getElementById("resposta").innerHTML = "❌ Opa! Tente outra vez!";
       }
+      document.getElementById("btn-proxima").style.display = "inline-block";
     }
+  }
 
-    carregarRodada();
-  </script>
-</body>
-</html>
+  // Chamada inicial
+  window.onload = novaRodada;
+</script>
