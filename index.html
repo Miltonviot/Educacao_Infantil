@@ -46,16 +46,22 @@
       transform: scale(1.05);
     }
 
-    .card img {
+    .card-img-wrapper {
       width: 100%;
       height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
-      object-fit: contain; /* altera de 'cover' para 'contain' */
-      background-color: #f0f0f0; /* adiciona fundo neutro para imagens menores */
-      padding: 10px; /* dá respiro para evitar cortes nas bordas */
+      overflow: hidden;
     }
 
+    .card-img-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+    }
 
     .card h2 {
       font-size: 1.4em;
@@ -69,27 +75,37 @@
 
   <div class="card-container">
     <a href="matematica.html" class="card">
-      <img src="Image/matematica.png" alt="Matemática">
+      <div class="card-img-wrapper">
+        <img src="Image/matematica.png" alt="Matemática">
+      </div>
       <h2>Matemática</h2>
     </a>
      
     <a href="ciencias.html" class="card">
-      <img src="Image/ciencias.png" alt="Ciências">
+      <div class="card-img-wrapper">
+        <img src="Image/ciencias.png" alt="Ciências">
+      </div>
       <h2>Ciências</h2>
     </a>
     
     <a href="historia.html" class="card">
-      <img src="Image/historia.png" alt="História">
+      <div class="card-img-wrapper">
+        <img src="Image/historia.png" alt="História">
+      </div>
       <h2>História</h2>
     </a>
 
     <a href="portugês.html" class="card">
-      <img src="Image/portugues.png" alt="Português">
-      <h2>Portugês</h2>
+      <div class="card-img-wrapper">
+        <img src="Image/portugues.png" alt="Português">
+      </div>
+      <h2>Português</h2>
     </a>
 
-     <a href="geografia.html" class="card">
-      <img src="Image/geografia.png" alt="Jogo da Forca">
+    <a href="geografia.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/geografia.png" alt="Geografia">
+      </div>
       <h2>Geografia</h2>
     </a>
   </div>
