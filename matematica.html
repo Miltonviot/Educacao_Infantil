@@ -15,7 +15,31 @@
       align-items: center;
       min-height: 100vh;
     }
+      .btn-voltar {
+    display: inline-block;
+    margin: 30px auto;
+    padding: 12px 25px;
+    background-color: #0984e3;
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
 
+  .btn-voltar:hover {
+    background-color: #74b9ff;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 600px) {
+    .btn-voltar {
+      font-size: 1em;
+      padding: 10px 20px;
+    }
+  }
     h1 {
       margin-top: 30px;
       font-size: 2em;
@@ -118,6 +142,8 @@
       </div>
       <h2>Em breve</h2>
     </div>
+
+    <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
   </div>
 
 </body>
