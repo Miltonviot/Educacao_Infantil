@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Modo de Vida dos Animais</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; background-color: #e8f5e9; padding: 20px; text-align: center; }
+    h1 { color: #2e7d32; }
+    .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px; }
+    .ambiente {
+      border: 2px dashed #1b5e20;
+      border-radius: 10px;
+      width: 30%;
+      min-height: 200px;
+      padding: 10px;
+      background-color: #ffffff;
+    }
+    .ambiente h3 { color: #2e7d32; }
+    .animal {
+      width: 80px;
+      height: 80px;
+      border: 2px solid #1b5e20;
+      border-radius: 10px;
+      margin: 10px;
+      cursor: grab;
+      background-color: #fff;
+    }
+    .animal img { width: 100%; height: 100%; object-fit: contain; }
+    .correto { background-color: #c8e6c9 !important; }
+    .errado { background-color: #ffcdd2 !important; }
+    @media (max-width: 768px) {
+      .ambiente { width: 90%; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Modo de Vida dos Animais</h1>
+  <p>Arraste cada animal para o ambiente onde ele vive!</p>
+
+  <div id="animais" class="container">
+    <div class="animal" draggable="true" data-ambiente="água"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Fish_icon.png" alt="Peixe"></div>
+    <div class="animal" draggable="true" data-ambiente="ar"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bird_icon.png" alt="Pássaro"></div>
+    <div class="animal" draggable="true" data-ambiente="solo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/75/Turtle_icon.png" alt="Tartaruga"></div>
+    <div class="animal" draggable="true" data-ambiente="solo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Ant_icon.png" alt="Formiga"></div>
+    <div class="animal" draggable="true" data-ambiente="ar"><img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Butterfly_icon.png" alt="Borboleta"></div>
+    <div class="animal" draggable="true" data-ambiente="água"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Dolphin_icon.png" alt="Golfinho"></div>
+  </div>
+
+  <div class="container">
+    <div class="ambiente" ondragover="event.preventDefault()" ondrop="soltar(event, 'solo')"><h3>Solo</h3></div>
+    <div class="ambiente" ondragover="event.preventDefault()" ondrop="soltar(event, 'água')"><h3>Água</h3></div>
+    <div class="ambiente" ondragover="event.preventDefault()" ondrop="soltar(event, 'ar')"><h3>Ar</h3></div>
+  </div>
+
+  <script>
+    let animalArrastado = null;
+
+    document.querySelectorAll('.animal').forEach(animal => {
+      animal.addEventListener('dragstart', () => {
+        animalArrastado = animal;
+      });
+    });
+
+    function soltar(event, ambienteCorreto) {
+      event.preventDefault();
+      const tipoAnimal = animalArrastado.getAttribute('data-ambiente');
+      if (tipoAnimal === ambienteCorreto) {
+        event.target.appendChild(animalArrastado);
+        animalArrastado.classList.remove('errado');
+        animalArrastado.classList.add('correto');
+      } else {
+        animalArrastado.classList.add('errado');
+        setTimeout(() => animalArrastado.classList.remove('errado'), 1000);
+      }
+      animalArrastado = null;
+    }
+  </script>
+</body>
+</html>
