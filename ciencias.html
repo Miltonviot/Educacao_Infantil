@@ -2,79 +2,149 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Modo de Vida dos Animais</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ciências - Jogos Educativos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; background-color: #e8f5e9; padding: 20px; text-align: center; }
-    h1 { color: #2e7d32; }
-    .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px; }
-    .ambiente {
-      border: 2px dashed #1b5e20;
-      border-radius: 10px;
-      width: 30%;
-      min-height: 200px;
-      padding: 10px;
-      background-color: #ffffff;
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
     }
-    .ambiente h3 { color: #2e7d32; }
-    .animal {
-      width: 80px;
-      height: 80px;
-      border: 2px solid #1b5e20;
-      border-radius: 10px;
-      margin: 10px;
-      cursor: grab;
-      background-color: #fff;
+      .btn-voltar {
+    display: inline-block;
+    margin: 30px auto;
+    padding: 12px 25px;
+    background-color: #0984e3;
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn-voltar:hover {
+    background-color: #74b9ff;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 600px) {
+    .btn-voltar {
+      font-size: 1em;
+      padding: 10px 20px;
     }
-    .animal img { width: 100%; height: 100%; object-fit: contain; }
-    .correto { background-color: #c8e6c9 !important; }
-    .errado { background-color: #ffcdd2 !important; }
-    @media (max-width: 768px) {
-      .ambiente { width: 90%; }
+  }
+    h1 {
+      margin-top: 30px;
+      font-size: 2em;
+      text-align: center;
+      color: #2d3436;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 20px;
+      width: 100%;
+      max-width: 1000px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 280px;
+      height: 280px;
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      text-decoration: none;
+      color: #2d3436;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card-img-wrapper {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f0f0f0;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      overflow: hidden;
+    }
+
+    .card-img-wrapper img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .card h2 {
+      font-size: 1.2em;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        max-width: 90%;
+        height: auto;
+      }
+
+      .card-img-wrapper {
+        height: 140px;
+      }
+
+      .card h2 {
+        font-size: 1.1em;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Modo de Vida dos Animais</h1>
-  <p>Arraste cada animal para o ambiente onde ele vive!</p>
 
-  <div id="animais" class="container">
-    <div class="animal" draggable="true" data-ambiente="água"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Fish_icon.png" alt="Peixe"></div>
-    <div class="animal" draggable="true" data-ambiente="ar"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Bird_icon.png" alt="Pássaro"></div>
-    <div class="animal" draggable="true" data-ambiente="solo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/75/Turtle_icon.png" alt="Tartaruga"></div>
-    <div class="animal" draggable="true" data-ambiente="solo"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Ant_icon.png" alt="Formiga"></div>
-    <div class="animal" draggable="true" data-ambiente="ar"><img src="https://upload.wikimedia.org/wikipedia/commons/4/45/Butterfly_icon.png" alt="Borboleta"></div>
-    <div class="animal" draggable="true" data-ambiente="água"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2c/Dolphin_icon.png" alt="Golfinho"></div>
+  <h1>📘 Jogos de Ciências</h1>
+
+  <div class="card-container">
+    <!-- Card 1 - Ativo -->
+    <a href="Classifique_Animais.html" class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/ciencias.png" alt="Operações Ciênciass">
+      </div>
+      <h2>Classifique os Animais  </h2>
+    </a>
+
+    <!-- Card 2 - Em breve -->
+    <div class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/ciencias.png" alt="Em breve">
+      </div>
+      <h2>Em breve</h2>
+    </div>
+
+    <!-- Card 3 - Em breve -->
+    <div class="card">
+      <div class="card-img-wrapper">
+        <img src="Image/ciencias.png" alt="Em breve">
+      </div>
+      <h2>Em breve</h2>
+    </div>
+
+    <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
   </div>
 
-  <div class="container">
-    <div class="ambiente" ondragover="event.preventDefault()" ondrop="soltar(event, 'solo')"><h3>Solo</h3></div>
-    <div class="ambiente" ondragover="event.preventDefault()" ondrop="soltar(event, 'água')"><h3>Água</h3></div>
-    <div class="ambiente" ondragover="event.preventDefault()" ondrop="soltar(event, 'ar')"><h3>Ar</h3></div>
-  </div>
-
-  <script>
-    let animalArrastado = null;
-
-    document.querySelectorAll('.animal').forEach(animal => {
-      animal.addEventListener('dragstart', () => {
-        animalArrastado = animal;
-      });
-    });
-
-    function soltar(event, ambienteCorreto) {
-      event.preventDefault();
-      const tipoAnimal = animalArrastado.getAttribute('data-ambiente');
-      if (tipoAnimal === ambienteCorreto) {
-        event.target.appendChild(animalArrastado);
-        animalArrastado.classList.remove('errado');
-        animalArrastado.classList.add('correto');
-      } else {
-        animalArrastado.classList.add('errado');
-        setTimeout(() => animalArrastado.classList.remove('errado'), 1000);
-      }
-      animalArrastado = null;
-    }
-  </script>
 </body>
 </html>
